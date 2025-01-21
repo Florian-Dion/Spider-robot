@@ -1,11 +1,10 @@
-#include "usart.h"
-
+#include <stm32f4/usart.h>
 
 // Buffer pour stocker les données reçues
 #define RX_BUFFER_SIZE 128
-volatile char rx_buffer[RX_BUFFER_SIZE];
-volatile uint16_t rx_index = 0;
- uint8_t rx_complete = 0;
+char rx_buffer[RX_BUFFER_SIZE];
+uint16_t rx_index = 0;
+uint8_t rx_complete = 0;
 
 /**
  * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
@@ -13,9 +12,11 @@ volatile uint16_t rx_index = 0;
  */
 void handle_USART1()
 {
-    if (USART1->SR->RXNE) // Si des données sont disponibles
+    printf("handle_USART1\n");
+    if (USART_SR & USART_SR_RXNE) // Si des données sont disponibles
     {
-        char received_data = (char)(USART1->DR->DR); // Lire les données
+        USART_SR &= ~USART_SR_RXNE; // Effacer le flag RXNE
+        char received_data = (char)(USART_DR); // Lire les données
         // Traitez les données ici (ex. stockage dans un buffer)
         if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
             rx_buffer[rx_index] = '\0';
@@ -31,8 +32,11 @@ void usart_send_string(const char* str)
 {
     while (*str)
     {
-        while (USART1->SR->TXE == 0); // Attendre que le registre d'émission soit vide
-        USART1->DR->DR = *str++;      // Envoyer un caractère
+        // Attendre que le registre d'émission soit vide
+        while (!(USART_SR & USART_SR_TXE));
+       // Envoyer un caractère
+       USART_DR = REP_BITS(USART_DR, 0, 9, *str);
+        str++;
     }
 }
 
@@ -71,7 +75,7 @@ void configure_hc06(void) {
 
 void stm32f4_usart1_init(void){
 
-    USART1->CR1->UE = 0;                // Disable the USART
+    //USART1->CR1->UE = 0;                // Disable the USART
     DISABLE_IRQS;                       // Disable IRQ
 
     // Activer l'horloge GPIO et USART
@@ -87,44 +91,39 @@ void stm32f4_usart1_init(void){
     // Configurer PA10 (USART1_RX) en AF7 (USART1)
     GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (10 - 8) * 4, 4, 0b0111);
 
+    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0001); // 38400 bps
+    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000000011010); // 38400 bps
+
+    USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0011); // 9600 bps
+    USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000001101000); // 9600 bps
+    /**
+     * Aciver l'émetteur
+     * Activer le récepteur
+     * Activer l'interruption RXNE
+     * Activer l'USART
+     */
+    USART_CR1 |= USART_CR1_TE | USART_CR1_RE;
+    USART_CR1 &= ~USART_CR1_M; // 8 bits de données
+    USART_CR1 &= ~USART_CR1_PCE; // Pas de parité
+    USART_CR1 &= ~USART_CR1_OVER8; // Oversampling par 16
+
+    //Configuration du registre CR2
+    USART_CR2 = REP_BITS(USART_CR2, 12, 2, 0);
+
+
+    // Configuration de l'interruption
+
     NVIC_ICER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);
     NVIC_IRQ(USART1_IRQ) = (uint32_t)handle_USART1;
     NVIC_IPR(USART1_IRQ) = 0;
 
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);
 
-
-    uint32_t pclk2 = 16000000;          // HSI par défaut
-    uint32_t apb2_prescaler = ((RCC_CFGGR_PPRE2_SET(RCC_CFGR, RCC_PPRE_DIV2)) == RCC_PPRE_DIV2) ? 2 : 1;
-    pclk2 /= apb2_prescaler;
-
-    uint32_t baudrate = 38400;
-    uint32_t usartdiv = (pclk2 + (baudrate / 2)) / baudrate;  // Arrondi
-    USART1->BRR->DIV_Mantissa = usartdiv >> 4;
-    USART1->BRR->DIV_Fraction = usartdiv & 0xF;
-
-
-    // Configuration du registre CR1
-    USART1->CR1->M = 0;                 // Word length: 8 bits
-    USART1->CR1->PCE = 0;               // Pas de contrôle de parité
-    USART1->CR1->TE = 1;                // Activer l'émetteur
-    USART1->CR1->RE = 1;                // Activer le récepteur
-    USART1->CR1->OVER8 = 0;             // Oversampling par 16
-  
-    // Configuration du registre CR2
-    USART1->CR2->STOP = 0x00000000U;    // 1 bit d'arrêt
-    
-    // Configfuration du registre CR3
-    USART1->CR3->CTSE = 0;              // Désactiver le contrôle matériel CTS
-    USART1->CR3->RTSE = 0;              // Désactiver le contrôle matériel RTS
-    USART1->CR3->ONEBIT = 0;            // Méthode d'échantillonnage par 3 bits (par défaut)
-
-    // Activer l'USART
-    USART1->CR1->UE = 1;
+    USART_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
+    USART_CR1 |= USART_CR1_UE; // Activer l'USART
 
     NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
 
-    USART1->CR1->RXNEIE = 1;            // Activer l'interruption RXNE
 
     ENABLE_IRQS;
 }
