@@ -88,6 +88,7 @@
 // APB2
 #define RCC_TIM1EN		(1 << 0)
 #define RCC_TIM8EN		(1 << 1)
+#define RCC_USART1EN    (1 << 4)
 #define RCC_ADC1EN		(1 << 8)
 #define RCC_ADC2EN		(1 << 9)
 #define RCC_ADC3EN		(1 << 10)

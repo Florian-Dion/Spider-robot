@@ -22,20 +22,20 @@
 #define STM32F4_USART_H
 
 #include "io.h"
-
-#define USART1_BASE 0x40011000
-#define USART1_REG(o) _IOREG(USART1_BASE, o)
-
-#define USART1_DR USART1_REG(0x04)
-#define USART1_BRR USART1_REG(0x08)
-#define USART1_CR1 USART1_REG(0x0C)
-#define USART1_CR2 USART1_REG(0x10)
-#define USART1_CR3 USART1_REG(0x14)
-#define USART1_GTPR USART1_REG(0x18)
+#include <stdint.h>
+#include <stdlib.h>
+#include <stm32f4/nvic.h>
+#include <stm32f4/rcc.h>
+#include <stm32f4/gpio.h>
 
 
-/** USART Return Code */
-#define USART_ERROR -1
+// Définitions pour le périphérique et les registres
+#define USART1_BASE 0x40011000U // Base address de USART1
+
+// Constantes système
+#define HSI_VALUE 16000000U // Fréquence de HSI à 16 MHz
+
+
 
 /**********************************************************************//**
  * @name IO Device: Universal synchronous asynchronous receiver transmitter (USART)
@@ -137,13 +137,13 @@ typedef volatile struct {
 
 /** USART Register prototype */
 typedef volatile struct {
-    USART_SR_t   SR;   // Offset 0x00: Status Register
-    USART_DR_t   DR;   // Offset 0x04: Data Register
-    USART_BRR_t  BRR;  // Offset 0x08: Baud Rate Register
-    USART_CR1_t  CR1;  // Offset 0x0C: Control Register 1
-    USART_CR2_t  CR2;  // Offset 0x10: Control Register 2
-    USART_CR3_t  CR3;  // Offset 0x14: Control Register 3
-    USART_GTPR_t GTPR; // Offset 0x18: Guard Time and Prescaler Register
+    USART_SR_t*   SR;   // Offset 0x00: Status Register
+    USART_DR_t*   DR;   // Offset 0x04: Data Register
+    USART_BRR_t*  BRR;  // Offset 0x08: Baud Rate Register
+    USART_CR1_t*  CR1;  // Offset 0x0C: Control Register 1
+    USART_CR2_t*  CR2;  // Offset 0x10: Control Register 2
+    USART_CR3_t*  CR3;  // Offset 0x14: Control Register 3
+    USART_GTPR_t* GTPR; // Offset 0x18: Guard Time and Prescaler Register
 } USART_t;
 
 /** USART1 module hardware access (#USART_t) */
@@ -153,6 +153,6 @@ typedef volatile struct {
  * @name Prototypes
  **************************************************************************/
 /**@{*/
-int stm32f4_uart1_init(void);
+void stm32f4_usart1_init(void);
 
 #endif //STM32F4_USART_H
