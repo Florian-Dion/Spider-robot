@@ -1,12 +1,72 @@
 #include "usart.h"
 
+
+// Buffer pour stocker les données reçues
+#define RX_BUFFER_SIZE 128
+volatile char rx_buffer[RX_BUFFER_SIZE];
+volatile uint16_t rx_index = 0;
+ uint8_t rx_complete = 0;
+
 /**
  * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
  * Donc chaque fois que le module HC-06 communiquera avec la carte
  */
 void handle_USART1()
 {
+    if (USART1->SR->RXNE) // Si des données sont disponibles
+    {
+        char received_data = (char)(USART1->DR->DR); // Lire les données
+        // Traitez les données ici (ex. stockage dans un buffer)
+        if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
+            rx_buffer[rx_index] = '\0';
+            rx_index = 0;
+            rx_complete = 1;      // Indique que la réception est complète
+        } else if (rx_index < RX_BUFFER_SIZE - 1) {
+            rx_buffer[rx_index++] = received_data;  // Stocke les données dans le buffer
+        }
+    }
+}
 
+void usart_send_string(const char* str)
+{
+    while (*str)
+    {
+        while (USART1->SR->TXE == 0); // Attendre que le registre d'émission soit vide
+        USART1->DR->DR = *str++;      // Envoyer un caractère
+    }
+}
+
+// Fonction pour envoyer une commande AT
+void send_at_command(const char *cmd) {
+    usart_send_string(cmd);
+    usart_send_string("\r\n");  // Les commandes AT terminent par CRLF
+}
+
+// Fonction pour configurer le HC-06
+void configure_hc06(void) {
+    // 1. Attente que le module soit prêt
+    send_at_command("AT");  // Vérifie si le HC-06 est en mode commande
+    while (!rx_complete);   // Attente de la réponse
+    rx_complete = 0;
+    if (strcmp(rx_buffer, "OK") != 0) {
+        // Si "OK" n'est pas reçu, le HC-06 n'est pas en mode commande
+        return;
+    }
+
+    // 2. Changer le nom
+    send_at_command("AT+NAMEHC06_BT");
+    while (!rx_complete);
+    rx_complete = 0;
+
+    // 3. Changer le baudrate
+    send_at_command("AT+BAUD4");  // 38400 bps
+    while (!rx_complete);
+    rx_complete = 0;
+
+    // 4. (Facultatif) Changer le PIN
+    send_at_command("AT+PIN1234");
+    while (!rx_complete);
+    rx_complete = 0;
 }
 
 void stm32f4_usart1_init(void){
@@ -67,10 +127,4 @@ void stm32f4_usart1_init(void){
     USART1->CR1->RXNEIE = 1;            // Activer l'interruption RXNE
 
     ENABLE_IRQS;
-}
-
-char uart_receive_byte(void)
-{
-    while (USART1->SR->RXNE == 0);  // Attendre que des données soient reçues
-    return (char)(USART1->DR->DR);  // Lire les données
 }
