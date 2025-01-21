@@ -35,6 +35,9 @@
 // Constantes système
 #define HSI_VALUE 16000000U // Fréquence de HSI à 16 MHz
 
+// Interrupts
+#define USART1_IRQ  37
+
 
 
 /**********************************************************************//**

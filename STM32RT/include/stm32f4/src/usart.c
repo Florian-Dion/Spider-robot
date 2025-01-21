@@ -1,5 +1,13 @@
 #include "usart.h"
 
+/**
+ * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
+ * Donc chaque fois que le module HC-06 communiquera avec la carte
+ */
+void handle_USART1()
+{
+
+}
 
 void stm32f4_usart1_init(void){
 
@@ -19,8 +27,12 @@ void stm32f4_usart1_init(void){
     // Configurer PA10 (USART1_RX) en AF7 (USART1)
     GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (10 - 8) * 4, 4, 0b0111);
 
+    NVIC_ICER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);
+    NVIC_IRQ(USART1_IRQ) = (uint32_t)handle_USART1;
+    NVIC_IPR(USART1_IRQ) = 0;
 
-    USART1->CR1->RXNEIE = 1;            // Activer l'interruption RXNE
+    NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);
+
 
     uint32_t pclk2 = 16000000;          // HSI par défaut
     uint32_t apb2_prescaler = ((RCC_CFGGR_PPRE2_SET(RCC_CFGR, RCC_PPRE_DIV2)) == RCC_PPRE_DIV2) ? 2 : 1;
@@ -49,6 +61,12 @@ void stm32f4_usart1_init(void){
 
     // Activer l'USART
     USART1->CR1->UE = 1;
+
+    NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
+
+    USART1->CR1->RXNEIE = 1;            // Activer l'interruption RXNE
+
+    ENABLE_IRQS;
 }
 
 char uart_receive_byte(void)
