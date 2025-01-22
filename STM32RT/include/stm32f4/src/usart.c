@@ -15,8 +15,12 @@ void handle_USART1()
     printf("handle_USART1\n");
     if (USART_SR & USART_SR_RXNE) // Si des données sont disponibles
     {
-        USART_SR &= ~USART_SR_RXNE; // Effacer le flag RXNE
-        char received_data = (char)(USART_DR); // Lire les données
+        //USART_SR &= ~USART_SR_RXNE; // Effacer le flag RXNE
+        //USART_SR &= ~USART_SR_ORE;  // Effacer le flag ORE
+        uint32_t received_data = USART_DR;
+        USART_SR = REP_BITS(USART_SR, 3, 3, 0); // Effacer le flag RXNE
+        //uint8_t received_data = GET_BITS(USART_DR, 0, 8); // Lire les données
+        printf("received_data: %lx\n", received_data);
         // Traitez les données ici (ex. stockage dans un buffer)
         if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
             rx_buffer[rx_index] = '\0';
@@ -26,6 +30,7 @@ void handle_USART1()
             rx_buffer[rx_index++] = received_data;  // Stocke les données dans le buffer
         }
     }
+    NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
 }
 
 void usart_send_string(const char* str)
@@ -94,8 +99,12 @@ void stm32f4_usart1_init(void){
     //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0001); // 38400 bps
     //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000000011010); // 38400 bps
 
-    USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0011); // 9600 bps
-    USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000001101000); // 9600 bps
+    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0011); // 9600 bps
+    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000001101000); // 9600 bps
+
+    USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b001010); // 9600 bps
+    USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b11010011010); // 9600 bps
+
     /**
      * Aciver l'émetteur
      * Activer le récepteur
