@@ -39,31 +39,6 @@ void set_servo1(int n){
 void set_servo2(int n){
 	TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));
 }
-void handle_TIM4(){
-	TIM4_SR = 0;
-	NVIC_ICPR(TIM4_IRQ >> 5) = 1 <<(TIM4_IRQ & 0x1f);
-	set_servo1(i1);
-	set_servo2(i2);
-	printf("%d ",i1);
-	i1= i1+s1*36;
-	if (i1>=1800 || i1<=0)
-		s1=s1*-1;
-	i2= i2+s2*36;
-	if (i2>=1800 || i2<=0)
-		s2=s2*-1;
-}
-
-void init_TIM4(){
-	TIM4_CR1 = 0;
-	TIM4_PSC = TIMER_PSC-1;
-	TIM4_ARR = TIMER_DELAY;
-	TIM4_EGR = TIM_UG;
-	TIM4_SR = 0;
-	NVIC_ISER(TIM4_IRQ >> 5) = 1 << (TIM4_IRQ & 0x1f);
-	TIM4_DIER=TIM_UIE;
-	ENABLE_IRQS;
-	TIM4_CR1 = TIM_CEN;
-}
 
 void init_servo(){
 	GPIOC_MODER = REP_BITS(GPIOC_MODER,2*6,2,GPIO_MODER_ALT);
@@ -71,12 +46,12 @@ void init_servo(){
 	GPIOC_AFRL = REP_BITS(GPIOC_AFRL,6*4,4,2);
 	GPIOC_AFRL = REP_BITS(GPIOC_AFRL,7*4,4,2);
 	TIM3_CR1 = 0;
-	//TIM3_CCMR1 = TIM_OC1M_PWM1;
-	TIM3_CCMR1 = TIM_OC2M_PWM1;
+	TIM3_CCMR1 = TIM_OC1M_PWM1;
+	//TIM3_CCMR1 = TIM_OC2M_PWM1;
 	TIM3_CCER = TIM_CC1E || TIM_CC2E;
 	TIM3_CCR1 = SERVO_1MS;
 	TIM3_PSC = SERVO_PSC -1;
-	TIM3_ARR = SERVO_PERIOD;
+	TIM3_ARR = SERVO_PERIOD*2;
 	TIM3_EGR = TIM_UG;
 	TIM3_CR1 = TIM_CEN;
 }
@@ -95,14 +70,20 @@ int main() {
 	// initialization
 
 	DISABLE_IRQS;
-	NVIC_ICER(TIM4_IRQ >> 5) = 1 << (TIM4_IRQ & 0x1f);
-	NVIC_IRQ(TIM4_IRQ) = (uint32_t) handle_TIM4;
-	NVIC_IPR(TIM4_IRQ) = 0;
 	init_servo();
-	init_TIM4();
 	// main loop
 	printf("Endless loop!\n");
 	
-	while(1) {		
+	while(1) {
+		for(int k = 0; k< 500000; k++) NOP;
+		set_servo1(i1);
+		set_servo2(i2);
+		printf("%d ",i2);
+		i1= i1+s1*6;
+		if (i1>=1800 || i1<=0)
+			s1=s1*-1;
+		i2= i2+s2*6;
+		if (i2>=1800 || i2<=0)
+			s2=s2*-1;		
 	}
 }
