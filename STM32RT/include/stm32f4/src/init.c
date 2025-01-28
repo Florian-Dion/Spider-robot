@@ -12,6 +12,13 @@
 #define SERVO_1MS 2400
 
 
+void set_servo1(int n){
+	TIM3_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));
+}
+void set_servo2(int n){
+	TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));
+}
+
 void init_servo(){
 
     printf("Init Servo...\n");

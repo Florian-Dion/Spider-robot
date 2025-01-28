@@ -1,5 +1,6 @@
 #include <tinyprintf.h>
 #include <stm32f4/src/usart.c>
+#include <stm32f4/src/init.c>
 
 int main(void) {
     printf("Initialisation...\n");
@@ -7,6 +8,7 @@ int main(void) {
     printf("USART1 initialise!\n");
     //configure_hc06();       // Configurer le HC-06
     //printf("HC-06 configuré!\n");
+    init_servo();           // Initialiser les servo
 
     while (1) {
         if (rx_complete) {  // Une ligne complète a été reçue

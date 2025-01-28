@@ -1,4 +1,5 @@
 #include <stm32f4/usart.h>
+#include <stm32f4/src/init.c>
 
 // Buffer pour stocker les données reçues
 #define RX_BUFFER_SIZE 128
@@ -21,6 +22,16 @@ void handle_USART1()
         USART_SR = REP_BITS(USART_SR, 3, 3, 0); // Effacer le flag RXNE
         //uint8_t received_data = GET_BITS(USART_DR, 0, 8); // Lire les données
         printf("received_data: %lx\n", received_data);
+
+        if (GET_BITS(received_data, 0, 4) == 0b0011){
+            set_servo1(1000);
+            set_servo2(600);
+        }
+        else if (GET_BITS(received_data, 0, 4) == 0b1000){
+            set_servo1(100);
+            set_servo2(50);
+        }
+
         // Traitez les données ici (ex. stockage dans un buffer)
         if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
             rx_buffer[rx_index] = '\0';
