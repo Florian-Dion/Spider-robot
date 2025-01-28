@@ -227,6 +227,28 @@
 #define TIM_CC1P		(1 << 1)
 #define TIM_CC1E		(1 << 0)
 
+// TIM1
+#define TIM1_CR1		TIM_IOREG(1, 0x00)
+#define TIM1_CR2		TIM_IOREG(1, 0x04)
+#define TIM1_SMCR		TIM_IOREG(1, 0x08)
+#define TIM1_DIER		TIM_IOREG(1, 0x0C)
+#define TIM1_SR			TIM_IOREG(1, 0x10)
+#define TIM1_EGR		TIM_IOREG(1, 0x14)
+#define TIM1_CCMR1		TIM_IOREG(1, 0x18)
+#define TIM1_CCMR2		TIM_IOREG(1, 0x1C)
+#define TIM1_CCER		TIM_IOREG(1, 0x20)
+#define TIM1_CNT		TIM_IOREG(1, 0x24)
+#define TIM1_PSC		TIM_IOREG(1, 0x28)
+#define TIM1_ARR		TIM_IOREG(1, 0x2C)
+#define TIM1_RCR		TIM_IOREG(1, 0x30)
+#define TIM1_CCR1		TIM_IOREG(1, 0x34)
+#define TIM1_CCR2		TIM_IOREG(1, 0x38)
+#define TIM1_CCR3		TIM_IOREG(1, 0x3C)
+#define TIM1_CCR4		TIM_IOREG(1, 0x40)
+#define TIM1_BDTR		TIM_IOREG(1, 0x44)
+#define TIM1_DCR		TIM_IOREG(1, 0x48)
+#define TIM1_DMAR		TIM_IOREG(1, 0x4C)
+
 
 // TIM2
 #define TIM2_CR1		TIM_IOREG(2, 0x00)
@@ -311,6 +333,29 @@
 #define TIM5_DCR		TIM_IOREG(5, 0x48)
 #define TIM5_DMAR		TIM_IOREG(5, 0x4C)
 #define TIM5_OR			TIM_IOREG(5, 0x50)
+
+// TIM8
+#define TIM8_CR1		TIM_IOREG(8, 0x00)
+#define TIM8_CR2		TIM_IOREG(8, 0x04)
+#define TIM8_SMCR		TIM_IOREG(8, 0x08)
+#define TIM8_DIER		TIM_IOREG(8, 0x0C)
+#define TIM8_SR			TIM_IOREG(8, 0x10)
+#define TIM8_EGR		TIM_IOREG(8, 0x14)
+#define TIM8_CCMR1		TIM_IOREG(8, 0x18)
+#define TIM8_CCMR2		TIM_IOREG(8, 0x1C)
+#define TIM8_CCER		TIM_IOREG(8, 0x20)
+#define TIM8_CNT		TIM_IOREG(8, 0x24)
+#define TIM8_PSC		TIM_IOREG(8, 0x28)
+#define TIM8_ARR		TIM_IOREG(8, 0x2C)
+#define TIM8_RCR		TIM_IOREG(8, 0x30)
+#define TIM8_CCR1		TIM_IOREG(8, 0x34)
+#define TIM8_CCR2		TIM_IOREG(8, 0x38)
+#define TIM8_CCR3		TIM_IOREG(8, 0x3C)
+#define TIM8_CCR4		TIM_IOREG(8, 0x40)
+#define TIM8_BDTR		TIM_IOREG(8, 0x44)
+#define TIM8_DCR		TIM_IOREG(8, 0x48)
+#define TIM8_DMAR		TIM_IOREG(8, 0x4C)
+
 
 
 // interrupts

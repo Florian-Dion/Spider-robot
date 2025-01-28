@@ -33,50 +33,50 @@ void handle_USART1()
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
 }
 
-void usart_send_string(const char* str)
-{
-    while (*str)
-    {
-        // Attendre que le registre d'émission soit vide
-        while (!(USART_SR & USART_SR_TXE));
-       // Envoyer un caractère
-       USART_DR = REP_BITS(USART_DR, 0, 9, *str);
-        str++;
-    }
-}
+// void usart_send_string(const char* str)
+// {
+//     while (*str)
+//     {
+//         // Attendre que le registre d'émission soit vide
+//         while (!(USART_SR & USART_SR_TXE));
+//        // Envoyer un caractère
+//        USART_DR = REP_BITS(USART_DR, 0, 9, *str);
+//         str++;
+//     }
+// }
 
-// Fonction pour envoyer une commande AT
-void send_at_command(const char *cmd) {
-    usart_send_string(cmd);
-    usart_send_string("\r\n");  // Les commandes AT terminent par CRLF
-}
+// // Fonction pour envoyer une commande AT
+// void send_at_command(const char *cmd) {
+//     usart_send_string(cmd);
+//     usart_send_string("\r\n");  // Les commandes AT terminent par CRLF
+// }
 
-// Fonction pour configurer le HC-06
-void configure_hc06(void) {
-    // 1. Attente que le module soit prêt
-    send_at_command("AT");  // Vérifie si le HC-06 est en mode commande
-    while (!rx_complete);   // Attente de la réponse
-    rx_complete = 0;
-    if (strcmp(rx_buffer, "OK") != 0) {
-        // Si "OK" n'est pas reçu, le HC-06 n'est pas en mode commande
-        return;
-    }
+// // Fonction pour configurer le HC-06
+// void configure_hc06(void) {
+//     // 1. Attente que le module soit prêt
+//     send_at_command("AT");  // Vérifie si le HC-06 est en mode commande
+//     while (!rx_complete);   // Attente de la réponse
+//     rx_complete = 0;
+//     if (strcmp(rx_buffer, "OK") != 0) {
+//         // Si "OK" n'est pas reçu, le HC-06 n'est pas en mode commande
+//         return;
+//     }
 
-    // 2. Changer le nom
-    send_at_command("AT+NAMEHC06_BT");
-    while (!rx_complete);
-    rx_complete = 0;
+//     // 2. Changer le nom
+//     send_at_command("AT+NAMEHC06_BT");
+//     while (!rx_complete);
+//     rx_complete = 0;
 
-    // 3. Changer le baudrate
-    send_at_command("AT+BAUD4");  // 38400 bps
-    while (!rx_complete);
-    rx_complete = 0;
+//     // 3. Changer le baudrate
+//     send_at_command("AT+BAUD4");  // 38400 bps
+//     while (!rx_complete);
+//     rx_complete = 0;
 
-    // 4. (Facultatif) Changer le PIN
-    send_at_command("AT+PIN1234");
-    while (!rx_complete);
-    rx_complete = 0;
-}
+//     // 4. (Facultatif) Changer le PIN
+//     send_at_command("AT+PIN1234");
+//     while (!rx_complete);
+//     rx_complete = 0;
+// }
 
 void stm32f4_usart1_init(void){
 
