@@ -24,12 +24,14 @@ void handle_USART1()
         printf("received_data: %lx\n", received_data);
 
         if (GET_BITS(received_data, 0, 4) == 0b0011){
-            set_servo1(1000);
+            set_servo1(1000); // à changer
             set_servo2(600);
+            set_servo3(200);
         }
         else if (GET_BITS(received_data, 0, 4) == 0b1000){
             set_servo1(100);
             set_servo2(50);
+            set_servo3(600);
         }
 
         // Traitez les données ici (ex. stockage dans un buffer)
