@@ -1,6 +1,6 @@
 #include <tinyprintf.h>
 #include <stm32f4/src/usart.c>
-#include <stm32f4/src/init.c>
+//#include <stm32f4/src/init.c>
 
 int main(void) {
     printf("Initialisation...\n");
