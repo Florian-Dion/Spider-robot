@@ -12,16 +12,31 @@
 #define SERVO_1MS 2400
 
 
-void set_servo1(int n){
-	TIM3_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));
-}
-void set_servo2(int n){
-	TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));
-}
+void set_servo1A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo1B(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo1C(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
-void set_servo3(int n){
-	TIM4_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));
-}
+
+void set_servo2A(int n){TIM4_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo2B(int n){TIM4_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo2C(int n){TIM4_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
+
+
+void set_servo3A(int n){TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo3B(int n){TIM3_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo3C(int n){TIM4_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+
+void set_servo4A(int n){TIM3_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo4B(int n){TIM3_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo4C(int n){TIM1_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
+
+void set_servo5A(int n){TIM3_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo5B(int n){TIM1_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo5C(int n){TIM1_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+
+void set_servo6A(int n){TIM8_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo6B(int n){TIM8_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo6C(int n){TIM8_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
 void init_servo(){
 
