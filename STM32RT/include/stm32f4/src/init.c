@@ -38,6 +38,24 @@ void set_servo6A(int n){TIM8_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6B(int n){TIM8_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6C(int n){TIM8_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
+/**
+ * Position de base du robot version 3 pattes
+ */
+void stand(){
+
+    set_servo1A(1000);
+    set_servo1B(600);
+    set_servo1C(200);
+
+    set_servo3A(500);
+    set_servo3B(600);
+    set_servo3C(200);
+
+    set_servo5A(100);
+    set_servo5B(600);
+    set_servo5C(200);
+}
+
 void init_servo(){
 
     printf("Init Servo...\n");
