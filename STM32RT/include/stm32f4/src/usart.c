@@ -24,7 +24,9 @@ void handle_USART1()
         printf("received_data: %lx\n", received_data);
 
         if (GET_BITS(received_data, 0, 4) == 0b0011){
-            stand();
+            set_servo1(1000); // à changer
+            set_servo2(600);
+            set_servo3(200);
         }
         else if (GET_BITS(received_data, 0, 4) == 0b1000){
             set_servo1(100);
@@ -107,8 +109,12 @@ void stm32f4_usart1_init(void){
     // Configurer PA10 (USART1_RX) en AF7 (USART1)
     GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (10 - 8) * 4, 4, 0b0111);
 
+    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0001); // 38400 bps
+    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000000011010); // 38400 bps
 
-    // Valeur : 104.1875 à 16 MHz et oversampling par 16 pour 9600 bps
+    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0011); // 9600 bps
+    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000001101000); // 9600 bps
+
     USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b001010); // 9600 bps
     USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b11010011010); // 9600 bps
 

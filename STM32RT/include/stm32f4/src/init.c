@@ -13,8 +13,8 @@
 
 
 void set_servo1A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo1B(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo1C(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo1B(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo1C(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
 
 void set_servo2A(int n){TIM4_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
@@ -30,31 +30,13 @@ void set_servo4A(int n){TIM3_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo4B(int n){TIM3_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo4C(int n){TIM1_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
-void set_servo5A(int n){TIM1_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo5A(int n){TIM3_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo5B(int n){TIM1_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo5C(int n){TIM1_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
 void set_servo6A(int n){TIM8_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6B(int n){TIM8_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6C(int n){TIM8_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
-
-/**
- * Position de base du robot version 3 pattes
- */
-void stand(){
-
-    set_servo1A(1000);
-    set_servo1B(600);
-    set_servo1C(200);
-
-    set_servo3A(500);
-    set_servo3B(600);
-    set_servo3C(200);
-
-    set_servo5A(100);
-    set_servo5B(600);
-    set_servo5C(200);
-}
 
 void init_servo(){
 
@@ -91,9 +73,6 @@ void init_servo(){
     TIM1_CCMR2 |= TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM1_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
     TIM1_CCR1 = SERVO_1MS;
-    TIM1_CCR2 = SERVO_1MS;
-    TIM1_CCR3 = SERVO_1MS;
-    TIM1_CCR4 = SERVO_1MS;
     TIM1_CR1 = 0;
     TIM1_PSC = SERVO_PSC - 1;
     TIM1_ARR = SERVO_PERIOD * 2;
@@ -119,9 +98,6 @@ void init_servo(){
     TIM8_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM8_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
     TIM8_CCR1 = SERVO_1MS;
-    TIM8_CCR2 = SERVO_1MS;
-    TIM8_CCR3 = SERVO_1MS;
-    TIM8_CCR4 = SERVO_1MS;
     TIM8_CR1 = 0;
     TIM8_PSC = SERVO_PSC - 1;
     TIM8_ARR = SERVO_PERIOD * 2;
@@ -146,9 +122,6 @@ void init_servo(){
     TIM2_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM2_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
     TIM2_CCR1 = SERVO_1MS;
-    TIM2_CCR2 = SERVO_1MS;
-    TIM2_CCR3 = SERVO_1MS;
-    TIM2_CCR4 = SERVO_1MS;
     TIM2_CR1 = 0;
     TIM2_PSC = SERVO_PSC - 1;
     TIM2_ARR = SERVO_PERIOD * 2;
@@ -175,7 +148,6 @@ void init_servo(){
     TIM3_CCR1 = SERVO_1MS;
     TIM3_CCR2 = SERVO_1MS;
     TIM3_CCR3 = SERVO_1MS;
-    TIM3_CCR4 = SERVO_1MS;
     TIM3_CR1 = 0;
     TIM3_PSC = SERVO_PSC - 1;
     TIM3_ARR = SERVO_PERIOD * 2;
@@ -200,9 +172,6 @@ void init_servo(){
     TIM4_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM4_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
     TIM4_CCR1 = SERVO_1MS;
-    TIM4_CCR2 = SERVO_1MS;
-    TIM4_CCR3 = SERVO_1MS;
-    TIM4_CCR4 = SERVO_1MS;
     TIM4_CR1 = 0;
     TIM4_PSC = SERVO_PSC - 1;
     TIM4_ARR = SERVO_PERIOD * 2;
