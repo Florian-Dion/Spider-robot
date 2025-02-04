@@ -7,6 +7,19 @@ char rx_buffer[RX_BUFFER_SIZE];
 uint16_t rx_index = 0;
 uint8_t rx_complete = 0;
 
+volatile int motor2A = 0;
+volatile int motor2B = 0;
+volatile int motor2C = 0;
+
+volatile int motor4A = 0;
+volatile int motor4B = 0;
+volatile int motor4C = 0;
+
+volatile int motor6A = 0;
+volatile int motor6B = 0;
+volatile int motor6C = 0;
+
+
 /**
  * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
  * Donc chaque fois que le module HC-06 communiquera avec la carte
@@ -24,14 +37,14 @@ void handle_USART1()
         printf("received_data: %lx\n", received_data);
 
         if (GET_BITS(received_data, 0, 4) == 0b0011){
-            set_servo1(1000); // à changer
-            set_servo2(600);
-            set_servo3(200);
+            set_servo1A(1000); // à changer
+            set_servo1B(600);
+            set_servo1C(200);
         }
         else if (GET_BITS(received_data, 0, 4) == 0b1000){
-            set_servo1(100);
-            set_servo2(50);
-            set_servo3(600);
+            set_servo1A(100);
+            set_servo1B(50);
+            set_servo1C(600);
         }
 
         // Traitez les données ici (ex. stockage dans un buffer)
@@ -45,6 +58,55 @@ void handle_USART1()
     }
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
 }
+
+void handle_TIM5(){
+    TIM5_SR = 0;
+    NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
+    if (motor2A < 900){
+        set_servo2A(motor2A);
+        motor2A = motor2A + 20;
+    }
+    
+    if (motor2B < 1400){
+        set_servo2B(motor2B);
+        motor2B = motor2B + 20;
+    }
+
+    if (motor2C < 600){
+        set_servo2C(motor2C);
+        motor2C = motor2C + 20;
+    }
+
+    if (motor4A < 900){
+        set_servo4A(motor4A);
+        motor4A = motor4A + 20;
+    }
+
+    if (motor4B < 900){
+        set_servo4B(motor4B);
+        motor4B = motor4B + 20;
+    }
+
+    if (motor4C < 600){
+        set_servo4C(motor4C);
+        motor4C = motor4C + 20;
+    }
+
+    if (motor6A < 1100){
+        set_servo6A(motor6A);
+        motor6A = motor6A + 20;
+    }
+
+    if (motor6B < 1400){
+        set_servo6B(motor6B);
+        motor6B = motor6B + 20;
+    }
+
+    if (motor6C < 1200){
+        set_servo6C(motor6C);
+        motor6C = motor6C + 20;
+    }
+}  
 
 // void usart_send_string(const char* str)
 // {
@@ -143,6 +205,11 @@ void stm32f4_usart1_init(void){
 
     USART_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
     USART_CR1 |= USART_CR1_UE; // Activer l'USART
+
+    NVIC_ICER(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);
+    NVIC_IRQ(TIM5_IRQ) = (uint32_t)handle_TIM5;
+    NVIC_IPR(TIM5_IRQ) = 0;
+    NVIC_ISER(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);
 
     NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
 

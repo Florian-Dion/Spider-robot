@@ -11,6 +11,9 @@
 #define SERVO_05MS 1200
 #define SERVO_1MS 2400
 
+#define TIMER_PSC 1000
+#define TIMER_DELAY APB1_CLK / TIMER_PSC / 50
+
 
 void set_servo1A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo1B(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
@@ -71,6 +74,7 @@ void init_servo(){
     RCC_APB1ENR |= RCC_TIM2EN;
     RCC_APB1ENR |= RCC_TIM3EN;
     RCC_APB1ENR |= RCC_TIM4EN;
+    RCC_APB1ENR |= RCC_TIM5EN;
 
     printf("RCC init done\n");
 
@@ -217,8 +221,15 @@ void init_servo(){
      * Rajouter un timer qui va générer une interruption toutes les n ms pour update les servomoteurs
      */
     //
+    TIM5_CR1 = 0;
+    TIM5_PSC = TIMER_PSC - 1;
+    TIM5_ARR = TIMER_DELAY*5;
+    TIM5_EGR = TIM_UG;
+    TIM5_SR = 0;
+    TIM5_DIER = TIM_UIE;
+    TIM5_CR1 = TIM_CEN | TIM_ARPE;
 
-    ENABLE_IRQS;
+    //ENABLE_IRQS;
 
     printf("End Init Servo\n");
 

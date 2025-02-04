@@ -14,10 +14,10 @@ void set_idle(){//position de base
     set_servo5B(600);
     set_servo5C(600);
     //groupe pair
-    set_servo2A(1200);
+    set_servo2A(1400);
     set_servo2B(1400);
-    set_servo2C(1200);
-    set_servo4A(1000);
+    set_servo2C(600);
+    set_servo4A(900);
     set_servo4B(600);
     set_servo4C(600);
     set_servo6A(1100);
@@ -28,12 +28,12 @@ void set_idle(){//position de base
 int main(void) {
     printf("Initialisation...\n");
     init_servo();           // Initialiser les servo
-    //stm32f4_usart1_init();  // Initialiser l'USART
+    stm32f4_usart1_init();  // Initialiser l'USART
     printf("USART1 initialise!\n");
     //configure_hc06();       // Configurer le HC-06
     //printf("HC-06 configuré!\n");
     
-    set_idle();
+    //set_idle();
     
 
     while (1) {
