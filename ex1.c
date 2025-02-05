@@ -51,18 +51,6 @@ int main(void) {
     
     //set_idle();
     
-
     while (1) {
-        /*if (rx_complete) {  // Une ligne complète a été reçue
-            printf("Received: %s\n", rx_buffer);  // Afficher les données reçues
-            rx_complete = 0;
-        }*/
-
-      /* while (!(ADC1_SR & ADC_EOC));
-	    int x = ADC1_DR;
-		printf("ADC1_DR = %d\n", x);
-		x = x/3 + 217;
-		printf("ADC1_DR / 3 = %d\n", x);
-		set_servo6C(x);*/
     }
 }

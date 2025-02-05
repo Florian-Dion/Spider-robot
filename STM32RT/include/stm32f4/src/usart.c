@@ -104,10 +104,10 @@ void handle_USART1()
     }
 }  */
 
-void handle_TIM5(){
+void handle_TIM13(){
     TIM5_SR = 0;
-    NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
-    printf("handle tim5\n");
+    NVIC_ICPR(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);  // Effacer le flag d'interruption
+    printf("handle tim13\n");
     if (motor4B > 900){
         set_servo4B(motor4B);
         motor4B = motor4B - 20;
@@ -209,10 +209,10 @@ void stm32f4_usart1_init(void){
     USART_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
     USART_CR1 |= USART_CR1_UE; // Activer l'USART
 
-    NVIC_ICER(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);
-    NVIC_IRQ(TIM5_IRQ) = (uint32_t)handle_TIM5;
-    NVIC_IPR(TIM5_IRQ) = 0;
-    NVIC_ISER(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);
+    NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+    NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
+    NVIC_IPR(TIM13_IRQ) = 0;
+    NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
 
     NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
 

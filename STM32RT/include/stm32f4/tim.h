@@ -356,6 +356,35 @@
 #define TIM8_DCR		TIM_IOREG(8, 0x48)
 #define TIM8_DMAR		TIM_IOREG(8, 0x4C)
 
+//TIM12
+#define TIM12_CR1		TIM_IOREG(12, 0x00)
+#define TIM12_SMCR        TIM_IOREG(12, 0x08)
+#define TIM12_DIER        TIM_IOREG(12, 0x0C)
+#define TIM12_SR          TIM_IOREG(12, 0x10)
+#define TIM12_EGR         TIM_IOREG(12, 0x14)
+#define TIM12_CCMR1       TIM_IOREG(12, 0x18)
+#define TIM12_CCER        TIM_IOREG(12, 0x20)
+#define TIM12_CNT         TIM_IOREG(12, 0x24)
+#define TIM12_PSC         TIM_IOREG(12, 0x28)
+#define TIM12_ARR         TIM_IOREG(12, 0x2C)
+#define TIM12_CCR1        TIM_IOREG(12, 0x34)
+#define TIM12_CCR2        TIM_IOREG(12, 0x38)
+
+
+//TIM13
+#define TIM13_CR1		TIM_IOREG(13, 0x00)
+#define TIM13_SMCR        TIM_IOREG(13, 0x08)
+#define TIM13_DIER        TIM_IOREG(13, 0x0C)
+#define TIM13_SR          TIM_IOREG(13, 0x10)
+#define TIM13_EGR         TIM_IOREG(13, 0x14)
+#define TIM13_CCMR1       TIM_IOREG(13, 0x18)
+#define TIM13_CCER        TIM_IOREG(13, 0x20)
+#define TIM13_CNT         TIM_IOREG(13, 0x24)
+#define TIM13_PSC         TIM_IOREG(13, 0x28)
+#define TIM13_ARR         TIM_IOREG(13, 0x2C)
+#define TIM13_CCR1        TIM_IOREG(13, 0x34)
+
+
 
 
 // interrupts
