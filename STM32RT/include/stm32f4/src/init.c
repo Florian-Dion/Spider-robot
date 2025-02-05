@@ -14,6 +14,15 @@
 #define TIMER_PSC 1000
 #define TIMER_DELAY APB1_CLK / TIMER_PSC / 50
 
+/************************************PARAMETRE POUR TIMER 5*********************************************** */
+#define PSC_20MS (14-1)
+#define DELAY_20MS (60000-1)
+/******************************************************************************************* */
+
+/************************************TIM1 ET TIM8****************************** */
+#define PSC_APB2 (28-1)
+#define DELAY_APB2 (60000-1)
+
 
 void set_servo1A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo1B(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
@@ -41,23 +50,6 @@ void set_servo6A(int n){TIM8_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6B(int n){TIM8_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6C(int n){TIM8_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
-/**
- * Position de base du robot version 3 pattes
- */
-void stand(){
-
-    set_servo1A(1000);
-    set_servo1B(600);
-    set_servo1C(200);
-
-    set_servo3A(500);
-    set_servo3B(600);
-    set_servo3C(200);
-
-    set_servo5A(100);
-    set_servo5B(600);
-    set_servo5C(200);
-}
 
 void init_servo(){
 
@@ -99,8 +91,8 @@ void init_servo(){
     TIM1_CCR3 = SERVO_1MS;
     TIM1_CCR4 = SERVO_1MS;
     TIM1_CR1 = 0;
-    TIM1_PSC = SERVO_PSC - 1;
-    TIM1_ARR = SERVO_PERIOD * 2;
+    TIM1_PSC = PSC_APB2;
+    TIM1_ARR = DELAY_APB2;
     TIM1_EGR = TIM_UG;
     TIM1_SR = 0;
     TIM1_CR1 = TIM_CEN | TIM_ARPE;
@@ -127,8 +119,8 @@ void init_servo(){
     TIM8_CCR3 = SERVO_1MS;
     TIM8_CCR4 = SERVO_1MS;
     TIM8_CR1 = 0;
-    TIM8_PSC = SERVO_PSC - 1;
-    TIM8_ARR = SERVO_PERIOD * 2;
+    TIM8_PSC = PSC_APB2;
+    TIM8_ARR = DELAY_APB2;
     TIM8_EGR = TIM_UG;
     TIM8_SR = 0;
     TIM8_CR1 = TIM_CEN | TIM_ARPE;
@@ -176,10 +168,10 @@ void init_servo(){
     TIM3_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM3_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM3_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    TIM3_CCR1 = SERVO_1MS;
-    TIM3_CCR2 = SERVO_1MS;
-    TIM3_CCR3 = SERVO_1MS;
-    TIM3_CCR4 = SERVO_1MS;
+    //TIM3_CCR1 = SERVO_1MS;
+    //TIM3_CCR2 = SERVO_1MS;
+    //TIM3_CCR3 = SERVO_1MS;
+    //TIM3_CCR4 = SERVO_1MS;
     TIM3_CR1 = 0;
     TIM3_PSC = SERVO_PSC - 1;
     TIM3_ARR = SERVO_PERIOD * 2;
@@ -218,12 +210,12 @@ void init_servo(){
 
 
     /**
-     * Rajouter un timer qui va générer une interruption toutes les n ms pour update les servomoteurs
+     * Un timer qui va générer une interruption toutes les n ms pour update les servomoteurs
      */
     //
     TIM5_CR1 = 0;
-    TIM5_PSC = TIMER_PSC - 1;
-    TIM5_ARR = TIMER_DELAY*5;
+    TIM5_PSC = PSC_20MS;
+    TIM5_ARR = DELAY_20MS;
     TIM5_EGR = TIM_UG;
     TIM5_SR = 0;
     TIM5_DIER = TIM_UIE;

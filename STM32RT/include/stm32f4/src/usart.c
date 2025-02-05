@@ -11,7 +11,7 @@ volatile int motor2A = 0;
 volatile int motor2B = 0;
 volatile int motor2C = 0;
 
-volatile int motor4A = 0;
+volatile int motor4A = 900;
 volatile int motor4B = 0;
 volatile int motor4C = 0;
 
@@ -29,22 +29,18 @@ void handle_USART1()
     printf("handle_USART1\n");
     if (USART_SR & USART_SR_RXNE) // Si des données sont disponibles
     {
-        //USART_SR &= ~USART_SR_RXNE; // Effacer le flag RXNE
-        //USART_SR &= ~USART_SR_ORE;  // Effacer le flag ORE
         uint32_t received_data = USART_DR;
         USART_SR = REP_BITS(USART_SR, 3, 3, 0); // Effacer le flag RXNE
-        //uint8_t received_data = GET_BITS(USART_DR, 0, 8); // Lire les données
-        printf("received_data: %lx\n", received_data);
 
-        if (GET_BITS(received_data, 0, 4) == 0b0011){
-            set_servo1A(1000); // à changer
-            set_servo1B(600);
-            set_servo1C(200);
+        if (GET_BITS(received_data, 0, 4) == 0b0011){ // AVANCER
+        /**
+         * 1 - Desactiver les IRQs
+         * 2 - Changer l handler de l'irq de TIM5
+         * 3 - Boucler en verifiant le position des moteurs qui va s'update à chaque proc de handler
+         * 4 - Si la position du moteur est bonne, desactiver le timer 5 et fin de l'irq de l'usart
+         */
         }
-        else if (GET_BITS(received_data, 0, 4) == 0b1000){
-            set_servo1A(100);
-            set_servo1B(50);
-            set_servo1C(600);
+        else if (GET_BITS(received_data, 0, 4) == 0b1000){ // RECULER
         }
 
         // Traitez les données ici (ex. stockage dans un buffer)
@@ -59,7 +55,7 @@ void handle_USART1()
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
 }
 
-void handle_TIM5(){
+/*void handle_TIM5(){
     TIM5_SR = 0;
     NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
     if (motor2A < 900){
@@ -106,7 +102,17 @@ void handle_TIM5(){
         set_servo6C(motor6C);
         motor6C = motor6C + 20;
     }
-}  
+}  */
+
+void handle_TIM5(){
+    TIM5_SR = 0;
+    NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
+    printf("handle tim5\n");
+    if (motor4A < 900){
+        set_servo4C(motor4A);
+        motor4A = motor4A + 20;
+    }
+}
 
 // void usart_send_string(const char* str)
 // {
@@ -171,11 +177,8 @@ void stm32f4_usart1_init(void){
     // Configurer PA10 (USART1_RX) en AF7 (USART1)
     GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (10 - 8) * 4, 4, 0b0111);
 
-    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0001); // 38400 bps
-    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000000011010); // 38400 bps
-
-    //USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b0011); // 9600 bps
-    //USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b000001101000); // 9600 bps
+/***************************************A CHANGER POUR UNE CLK A 84 MHZ*************************************** */
+/***************************************SOIT 546.875********************************************************** */
 
     USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b001010); // 9600 bps
     USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b11010011010); // 9600 bps
