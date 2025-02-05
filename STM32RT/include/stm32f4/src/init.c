@@ -7,22 +7,18 @@
 #include <stm32f4/tim.h>
 #include <stm32f4/adc.h>
 
-#define SERVO_PSC 14
-#define SERVO_PERIOD 60000
-#define SERVO_05MS 1200
-#define SERVO_1MS 2400
+/************************************PARAMETRE POUR LES TIMER DES SERVOMOTEURS****************************** */
+#define SERVO_PSC (14-1)
+#define SERVO_PERIOD (60000-1)
+#define SERVO_05MS ((SERVO_PERIOD+1)/40)
+#define SERVO_1MS ((SERVO_PERIOD+1)/20)
+/********************************************************************************************************** */
 
-#define TIMER_PSC 1000
-#define TIMER_DELAY APB1_CLK / TIMER_PSC / 50
-
-/************************************PARAMETRE POUR TIMER 5*********************************************** */
+/************************************PARAMETRE POUR TIMER 13*********************************************** */
 #define PSC_20MS (14-1)
 #define DELAY_20MS (60000-1)
-/******************************************************************************************* */
+/********************************************************************************************************** */
 
-/************************************TIM1 ET TIM8****************************** */
-#define PSC_APB2 (28-1)
-#define DELAY_APB2 (60000-1)
 
 
 void set_servo1A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
@@ -92,8 +88,8 @@ void init_servo(){
     TIM2_CCR3 = SERVO_1MS;
     TIM2_CCR4 = SERVO_1MS;*/
     TIM2_CR1 = 0;
-    TIM2_PSC = SERVO_PSC - 1;
-    TIM2_ARR = SERVO_PERIOD * 2;
+    TIM2_PSC = SERVO_PSC;
+    TIM2_ARR = SERVO_PERIOD;
     TIM2_EGR = TIM_UG;
     TIM2_SR = 0;
     TIM2_CR1 = TIM_CEN | TIM_ARPE;
@@ -117,11 +113,10 @@ void init_servo(){
     //TIM3_CCR1 = SERVO_1MS;
     //TIM3_CCR2 = SERVO_1MS;
     //TIM3_CCR3 = SERVO_1MS;
-    //set_servo4B(1100);
     //TIM3_CCR4 = SERVO_1MS;
     TIM3_CR1 = 0;
-    TIM3_PSC = SERVO_PSC - 1;
-    TIM3_ARR = SERVO_PERIOD * 2;
+    TIM3_PSC = SERVO_PSC;
+    TIM3_ARR = SERVO_PERIOD;
     TIM3_EGR = TIM_UG;
     TIM3_SR = 0;
     TIM3_CR1 = TIM_CEN | TIM_ARPE;
@@ -142,13 +137,13 @@ void init_servo(){
     TIM4_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM4_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM4_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    TIM4_CCR1 = SERVO_1MS;
+    /*TIM4_CCR1 = SERVO_1MS;
     TIM4_CCR2 = SERVO_1MS;
     TIM4_CCR3 = SERVO_1MS;
-    TIM4_CCR4 = SERVO_1MS;
+    TIM4_CCR4 = SERVO_1MS;*/
     TIM4_CR1 = 0;
-    TIM4_PSC = SERVO_PSC - 1;
-    TIM4_ARR = SERVO_PERIOD * 2;
+    TIM4_PSC = SERVO_PSC;
+    TIM4_ARR = SERVO_PERIOD;
     TIM4_EGR = TIM_UG;
     TIM4_SR = 0;
     TIM4_CR1 = TIM_CEN | TIM_ARPE;
@@ -174,8 +169,8 @@ void init_servo(){
     TIM5_CCR3 = SERVO_1MS;
     TIM5_CCR4 = SERVO_1MS;*/
     TIM5_CR1 = 0;
-    TIM5_PSC = SERVO_PSC - 1;
-    TIM5_ARR = SERVO_PERIOD * 2;
+    TIM5_PSC = SERVO_PSC;
+    TIM5_ARR = SERVO_PERIOD;
     TIM5_EGR = TIM_UG;
     TIM5_SR = 0;
     TIM5_CR1 = TIM_CEN | TIM_ARPE;
@@ -195,8 +190,8 @@ void init_servo(){
     //TIM12_CCR1 = SERVO_1MS;
     //TIM12_CCR2 = SERVO_1MS;
     TIM12_CR1 = 0;
-    TIM12_PSC = SERVO_PSC - 1;
-    TIM12_ARR = SERVO_PERIOD * 2;
+    TIM12_PSC = SERVO_PSC;
+    TIM12_ARR = SERVO_PERIOD;
     TIM12_EGR = TIM_UG;
     TIM12_SR = 0;
     TIM12_CR1 = TIM_CEN | TIM_ARPE;
