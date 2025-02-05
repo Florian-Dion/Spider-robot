@@ -5,6 +5,7 @@
 #include <stm32f4/exti.h>
 #include <stm32f4/syscfg.h>
 #include <stm32f4/tim.h>
+#include <stm32f4/adc.h>
 
 #define SERVO_PSC 14
 #define SERVO_PERIOD 60000
@@ -61,12 +62,14 @@ void init_servo(){
     RCC_AHB1ENR |= RCC_GPIOCEN;
     RCC_AHB1ENR |= RCC_GPIOEEN;
 
-    RCC_APB2ENR |= RCC_TIM1EN;
+    //RCC_APB2ENR |= RCC_TIM1EN;
     RCC_APB2ENR |= RCC_TIM8EN;
     RCC_APB1ENR |= RCC_TIM2EN;
     RCC_APB1ENR |= RCC_TIM3EN;
     RCC_APB1ENR |= RCC_TIM4EN;
     RCC_APB1ENR |= RCC_TIM5EN;
+    //RCC_APB2ENR |= RCC_ADC1EN;
+    //ADC1_CR2 |= ADC_SWSTART;
 
     printf("RCC init done\n");
 
@@ -86,10 +89,10 @@ void init_servo(){
     TIM1_CCMR1 |= TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM1_CCMR2 |= TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM1_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    TIM1_CCR1 = SERVO_1MS;
-    TIM1_CCR2 = SERVO_1MS;
-    TIM1_CCR3 = SERVO_1MS;
-    TIM1_CCR4 = SERVO_1MS;
+    //TIM1_CCR1 = SERVO_1MS;
+    //TIM1_CCR2 = SERVO_1MS;
+    //TIM1_CCR3 = SERVO_1MS;
+    //TIM1_CCR4 = SERVO_1MS;
     TIM1_CR1 = 0;
     TIM1_PSC = PSC_APB2;
     TIM1_ARR = DELAY_APB2;
@@ -171,6 +174,7 @@ void init_servo(){
     //TIM3_CCR1 = SERVO_1MS;
     //TIM3_CCR2 = SERVO_1MS;
     //TIM3_CCR3 = SERVO_1MS;
+    set_servo4B(1100);
     //TIM3_CCR4 = SERVO_1MS;
     TIM3_CR1 = 0;
     TIM3_PSC = SERVO_PSC - 1;

@@ -47,12 +47,12 @@ int main() {
 	ADC1_CR2 |= ADC_SWSTART;
 	printf("Endless loop!\n");
 	while(1) {
-		/*while (!(ADC1_SR & ADC_EOC));
+		while (!(ADC1_SR & ADC_EOC));
 		int x = ADC1_DR;
 		printf("ADC1_DR = %d\n", x);
 		x = x/3 + 217;
-		printf("ADC1_DR / 3 = %d\n", x);*/
-		set_servo4C(600);
+		printf("ADC1_DR / 3 = %d\n", x);
+		set_servo6C(x);
 		
 	}
 

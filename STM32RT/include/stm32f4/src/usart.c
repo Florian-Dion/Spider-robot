@@ -12,7 +12,7 @@ volatile int motor2B = 0;
 volatile int motor2C = 0;
 
 volatile int motor4A = 900;
-volatile int motor4B = 0;
+volatile int motor4B = 1100;
 volatile int motor4C = 0;
 
 volatile int motor6A = 0;
@@ -108,9 +108,9 @@ void handle_TIM5(){
     TIM5_SR = 0;
     NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
     printf("handle tim5\n");
-    if (motor4A < 900){
-        set_servo4C(motor4A);
-        motor4A = motor4A + 20;
+    if (motor4B > 900){
+        set_servo4B(motor4B);
+        motor4B = motor4B - 20;
     }
 }
 

@@ -1,6 +1,14 @@
 #include <tinyprintf.h>
 #include <stm32f4/src/usart.c>
+
 //#include <stm32f4/src/init.c>
+
+#define MAX 4095
+
+// GPIOC
+
+// GPIOA
+#define POTENT 4
 
 void set_idle(){//position de base
     //groupe impair
@@ -25,6 +33,14 @@ void set_idle(){//position de base
     set_servo6C(1200);
 }
 
+void init_photo_res(){
+	GPIOA_MODER = REP_BITS(GPIOA_MODER, POTENT*2, 2, GPIO_MODER_ANA);
+	ADC1_SQR3 = POTENT;
+	ADC1_CR1 = ADC_12b | ADC_SCAN;
+	ADC1_CR2 = ADC_ADON;
+	ADC1_CR2 |= (1<<1);
+}
+
 int main(void) {
     printf("Initialisation...\n");
     init_servo();           // Initialiser les servo
@@ -37,9 +53,16 @@ int main(void) {
     
 
     while (1) {
-        if (rx_complete) {  // Une ligne complète a été reçue
+        /*if (rx_complete) {  // Une ligne complète a été reçue
             printf("Received: %s\n", rx_buffer);  // Afficher les données reçues
             rx_complete = 0;
-        }
+        }*/
+
+      /* while (!(ADC1_SR & ADC_EOC));
+	    int x = ADC1_DR;
+		printf("ADC1_DR = %d\n", x);
+		x = x/3 + 217;
+		printf("ADC1_DR / 3 = %d\n", x);
+		set_servo6C(x);*/
     }
 }
