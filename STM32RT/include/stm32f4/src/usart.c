@@ -105,7 +105,7 @@ void handle_USART1()
 }  */
 
 void handle_TIM13(){
-    TIM5_SR = 0;
+    TIM13_SR = 0;
     NVIC_ICPR(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);  // Effacer le flag d'interruption
     printf("handle tim13\n");
     if (motor4B > 900){
@@ -184,7 +184,7 @@ void stm32f4_usart1_init(void){
     USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b11010011010); // 9600 bps
 
     /**
-     * Aciver l'émetteur
+     * Activer l'émetteur
      * Activer le récepteur
      * Activer l'interruption RXNE
      * Activer l'USART
@@ -209,13 +209,12 @@ void stm32f4_usart1_init(void){
     USART_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
     USART_CR1 |= USART_CR1_UE; // Activer l'USART
 
+    NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
+
     NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
     NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
     NVIC_IPR(TIM13_IRQ) = 0;
-    NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
-
-    NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
-
+    NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
 
     ENABLE_IRQS;
 }

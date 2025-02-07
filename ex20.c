@@ -1,4 +1,6 @@
-/* Embedded Systems - Exercise 15 */
+/**
+ * Ce fichier doit être supprimé à terme
+ */
 
 #include <tinyprintf.h>
 #include <stm32f4/rcc.h>

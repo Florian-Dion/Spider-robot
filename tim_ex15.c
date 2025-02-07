@@ -1,3 +1,7 @@
+/**
+ * Ce fichier doit être supprimé à terme
+ */
+
 #include <tinyprintf.h>
 #include <stm32f4/rcc.h>
 #include <stm32f4/gpio.h>
