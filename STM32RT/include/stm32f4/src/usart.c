@@ -1,5 +1,6 @@
 #include <stm32f4/usart.h>
 #include <stm32f4/src/init.c>
+#include <stm32f4/src/handler_irq.c>
 
 // Buffer pour stocker les données reçues
 #define RX_BUFFER_SIZE 128
@@ -7,22 +8,11 @@ char rx_buffer[RX_BUFFER_SIZE];
 uint16_t rx_index = 0;
 uint8_t rx_complete = 0;
 
-volatile int motor2A = 0;
-volatile int motor2B = 0;
-volatile int motor2C = 0;
-
-volatile int motor4A = 900;
-volatile int motor4B = 1100;
-volatile int motor4C = 0;
-
-volatile int motor6A = 0;
-volatile int motor6B = 0;
-volatile int motor6C = 0;
-
 
 /**
  * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
  * Donc chaque fois que le module HC-06 communiquera avec la carte
+ * On suppose que l'utilisateur est bienveillant et qu'il envoie uniquement des messages connus
  */
 void handle_USART1()
 {
@@ -33,92 +23,47 @@ void handle_USART1()
         USART_SR = REP_BITS(USART_SR, 3, 3, 0); // Effacer le flag RXNE
 
         if (GET_BITS(received_data, 0, 4) == 0b0011){ // AVANCER
-        /**
-         * 1 - Desactiver les IRQs
-         * 2 - Changer l handler de l'irq de TIM13
-         * 3 - Boucler en verifiant le position des moteurs qui va s'update à chaque proc de handler
-         * 4 - Si la position du moteur est bonne, desactiver le timer 5 et fin de l'irq de l'usart
-         */
             DISABLE_IRQS;
             NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
-            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handler_avancer;
             NVIC_IPR(TIM13_IRQ) = 0;
             NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
         }
         else if (GET_BITS(received_data, 0, 4) == 0b1000){ // RECULER
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handler_reculer;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
         }
-        /*
-        // Traitez les données ici (ex. stockage dans un buffer)
-        if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
-            rx_buffer[rx_index] = '\0';
-            rx_index = 0;
-            rx_complete = 1;      // Indique que la réception est complète
-        } else if (rx_index < RX_BUFFER_SIZE - 1) {
-            rx_buffer[rx_index++] = received_data;  // Stocke les données dans le buffer
-        }*/
+        else if (GET_BITS(received_data, 0, 4) == 0b0100){ // TOURNER GAUCHE
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handler_tourner_gauche;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
+        }
+        else if (GET_BITS(received_data, 0, 4) == 0b1100){ // TOURNER DROITE
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handler_tourner_droite;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
+        }
+        else if (GET_BITS(received_data, 0, 4) == 0b0000){ // REPOS
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handler_repos;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
+        }
+
+        NVIC_ISER(USART1_IRQ >> 5) = 0 << (USART1_IRQ & 0x1F);  // Desactiver l'interruption sur l'usart1
     }
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
     ENABLE_IRQS;
 }
 
-/*void handle_TIM5(){
-    TIM5_SR = 0;
-    NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
-    if (motor2A < 900){
-        set_servo2A(motor2A);
-        motor2A = motor2A + 20;
-    }
-    
-    if (motor2B < 1400){
-        set_servo2B(motor2B);
-        motor2B = motor2B + 20;
-    }
-
-    if (motor2C < 600){
-        set_servo2C(motor2C);
-        motor2C = motor2C + 20;
-    }
-
-    if (motor4A < 900){
-        set_servo4A(motor4A);
-        motor4A = motor4A + 20;
-    }
-
-    if (motor4B < 900){
-        set_servo4B(motor4B);
-        motor4B = motor4B + 20;
-    }
-
-    if (motor4C < 600){
-        set_servo4C(motor4C);
-        motor4C = motor4C + 20;
-    }
-
-    if (motor6A < 1100){
-        set_servo6A(motor6A);
-        motor6A = motor6A + 20;
-    }
-
-    if (motor6B < 1400){
-        set_servo6B(motor6B);
-        motor6B = motor6B + 20;
-    }
-
-    if (motor6C < 1200){
-        set_servo6C(motor6C);
-        motor6C = motor6C + 20;
-    }
-}  */
-
-void handle_TIM13(){
-    TIM13_SR = 0;
-    NVIC_ICPR(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);  // Effacer le flag d'interruption
-    printf("handle tim13\n");
-    if (motor4B > 900){
-        set_servo4B(motor4B);
-        motor4B = motor4B - 20;
-    }
-}
 
 // void usart_send_string(const char* str)
 // {
