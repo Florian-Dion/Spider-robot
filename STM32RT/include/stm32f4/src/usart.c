@@ -35,14 +35,19 @@ void handle_USART1()
         if (GET_BITS(received_data, 0, 4) == 0b0011){ // AVANCER
         /**
          * 1 - Desactiver les IRQs
-         * 2 - Changer l handler de l'irq de TIM5
+         * 2 - Changer l handler de l'irq de TIM13
          * 3 - Boucler en verifiant le position des moteurs qui va s'update à chaque proc de handler
          * 4 - Si la position du moteur est bonne, desactiver le timer 5 et fin de l'irq de l'usart
          */
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
         }
         else if (GET_BITS(received_data, 0, 4) == 0b1000){ // RECULER
         }
-
+        /*
         // Traitez les données ici (ex. stockage dans un buffer)
         if (received_data == '\n') {          // Si fin de ligne, commande reçue complète
             rx_buffer[rx_index] = '\0';
@@ -50,9 +55,10 @@ void handle_USART1()
             rx_complete = 1;      // Indique que la réception est complète
         } else if (rx_index < RX_BUFFER_SIZE - 1) {
             rx_buffer[rx_index++] = received_data;  // Stocke les données dans le buffer
-        }
+        }*/
     }
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
+    ENABLE_IRQS;
 }
 
 /*void handle_TIM5(){
@@ -210,11 +216,6 @@ void stm32f4_usart1_init(void){
     USART_CR1 |= USART_CR1_UE; // Activer l'USART
 
     NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
-
-    NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
-    NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
-    NVIC_IPR(TIM13_IRQ) = 0;
-    NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
 
     ENABLE_IRQS;
 }
