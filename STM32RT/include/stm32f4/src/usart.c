@@ -104,14 +104,28 @@ void handle_USART1()
     }
 }  */
 
+int sens = 0;
+
 void handle_TIM13(){
     TIM13_SR = 0;
     NVIC_ICPR(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);  // Effacer le flag d'interruption
-    printf("handle tim13\n");
-    if (motor4B > 900){
-        set_servo4B(motor4B);
-        motor4B = motor4B - 20;
+    //printf("handle tim13\n");
+    if (motor2A <= 900){
+        sens = 0;
     }
+    else if (motor2A >= 1400)
+    {
+        sens = 1;
+    }
+    if (sens == 0){
+        motor2A = motor2A + 20;
+        set_servo2A(motor2A);
+    }
+    else{
+        motor2A = motor2A - 20;
+        set_servo2A(motor2A);
+    }
+    printf("motor2A = %d\n", motor2A);
 }
 
 // void usart_send_string(const char* str)
