@@ -68,7 +68,7 @@ void init_servo(){
     printf("RCC init done\n");
 
     DISABLE_IRQS;
-
+/*
     // TIM2 init on GPIOA and B PA15, PB3, PB10, PB11
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 15*2, 2, GPIO_MODER_ALT);
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 3*2, 2, GPIO_MODER_ALT);
@@ -83,10 +83,11 @@ void init_servo(){
     TIM2_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM2_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM2_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    /*TIM2_CCR1 = SERVO_1MS;
-    TIM2_CCR2 = SERVO_1MS;
-    TIM2_CCR3 = SERVO_1MS;
-    TIM2_CCR4 = SERVO_1MS;*/
+    //TIM2_CCR1 = SERVO_1MS;
+    //TIM2_CCR2 = SERVO_1MS;
+    //TIM2_CCR3 = SERVO_1MS;
+    set_servo4C(900);
+    //TIM2_CCR4 = SERVO_1MS;
     TIM2_CR1 = 0;
     TIM2_PSC = SERVO_PSC;
     TIM2_ARR = SERVO_PERIOD;
@@ -95,6 +96,7 @@ void init_servo(){
     TIM2_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM2 init done\n");
+    */
 
     // TIM3 init on GPIOB PB4, PB5, PB0, PB1
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 4*2, 2, GPIO_MODER_ALT);
@@ -113,7 +115,9 @@ void init_servo(){
     //TIM3_CCR1 = SERVO_1MS;
     //TIM3_CCR2 = SERVO_1MS;
     //TIM3_CCR3 = SERVO_1MS;
+    set_servo4A(900);
     //TIM3_CCR4 = SERVO_1MS;
+    set_servo4B(900);
     TIM3_CR1 = 0;
     TIM3_PSC = SERVO_PSC;
     TIM3_ARR = SERVO_PERIOD;
@@ -137,10 +141,13 @@ void init_servo(){
     TIM4_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM4_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM4_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    /*TIM4_CCR1 = SERVO_1MS;
-    TIM4_CCR2 = SERVO_1MS;
-    TIM4_CCR3 = SERVO_1MS;
-    TIM4_CCR4 = SERVO_1MS;*/
+    set_servo1A(900);
+    //TIM4_CCR1 = SERVO_1MS;
+    //TIM4_CCR2 = SERVO_1MS;
+    //TIM4_CCR3 = SERVO_1MS;
+    set_servo1B(600);
+    //TIM4_CCR4 = SERVO_1MS;
+    set_servo1C(600);
     TIM4_CR1 = 0;
     TIM4_PSC = SERVO_PSC;
     TIM4_ARR = SERVO_PERIOD;
@@ -149,6 +156,7 @@ void init_servo(){
     TIM4_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM4 init done\n");
+    
 
     //TIM5 init on GPIOA PA0, PA1, PA2, PA3
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 0*2, 2, GPIO_MODER_ALT);
@@ -164,9 +172,10 @@ void init_servo(){
     TIM5_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM5_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     TIM5_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    /*TIM5_CCR1 = SERVO_1MS;
-    TIM5_CCR2 = SERVO_1MS;
-    TIM5_CCR3 = SERVO_1MS;
+    /*TIM5_CCR1 = SERVO_1MS;*/
+    //TIM5_CCR2 = SERVO_1MS;
+    //set_servo1A(900);
+    /*TIM5_CCR3 = SERVO_1MS;
     TIM5_CCR4 = SERVO_1MS;*/
     TIM5_CR1 = 0;
     TIM5_PSC = SERVO_PSC;
