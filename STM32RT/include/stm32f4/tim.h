@@ -256,6 +256,7 @@
 
 #define TIM1_MOE        (1 << 15)
 #define TIM1_OSSI       (1 << 10)
+#define TIM1_OSSR       (1 << 9)
 
 
 // TIM2
