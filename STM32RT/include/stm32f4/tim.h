@@ -82,6 +82,10 @@
 #define TIM_MMS_COMPARE3		(0b110 << 4)
 #define TIM_MMS_COMPARE4		(0b111 << 4)
 #define TIM_CCDSS				(1 << 3)
+#define TIM_OIS1                (1 << 8)
+#define TIM_OIS2                (1 << 10)
+#define TIM_OIS3                (1 << 12)
+#define TIM_OIS4                (1 << 14)
 
 // TIM_SMCR
 #define TIM_ETP			(1 << 15)
@@ -248,6 +252,10 @@
 #define TIM1_BDTR		TIM_IOREG(1, 0x44)
 #define TIM1_DCR		TIM_IOREG(1, 0x48)
 #define TIM1_DMAR		TIM_IOREG(1, 0x4C)
+
+
+#define TIM1_MOE        (1 << 15)
+#define TIM1_OSSI       (1 << 10)
 
 
 // TIM2
