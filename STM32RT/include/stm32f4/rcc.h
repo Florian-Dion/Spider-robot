@@ -84,11 +84,14 @@
 #define RCC_TIM13EN		(1 << 7)
 #define RCC_TIM14EN		(1 << 8)
 #define RCC_DACEN		(1 << 29)
+#define RCC_USART2EN    (1 << 17)
+
 
 // APB2
 #define RCC_TIM1EN		(1 << 0)
 #define RCC_TIM8EN		(1 << 1)
 #define RCC_USART1EN    (1 << 4)
+#define RCC_USART6EN    (1 << 5)
 #define RCC_ADC1EN		(1 << 8)
 #define RCC_ADC2EN		(1 << 9)
 #define RCC_ADC3EN		(1 << 10)

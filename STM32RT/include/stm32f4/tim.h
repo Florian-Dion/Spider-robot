@@ -28,7 +28,7 @@
 #define TIM13_BASE	0x40001C00
 #define TIM14_BASE	0x40002000
 
-#define TIM1_BASE	0x40010000
+#define TIM1_BASE	0x40010000U
 #define TIM8_BASE	0x40010400
 #define TIM9_BASE	0x40014000
 #define TIM10_BASE	0x40014400
@@ -82,6 +82,10 @@
 #define TIM_MMS_COMPARE3		(0b110 << 4)
 #define TIM_MMS_COMPARE4		(0b111 << 4)
 #define TIM_CCDSS				(1 << 3)
+#define TIM_OIS1                (1 << 8)
+#define TIM_OIS2                (1 << 10)
+#define TIM_OIS3                (1 << 12)
+#define TIM_OIS4                (1 << 14)
 
 // TIM_SMCR
 #define TIM_ETP			(1 << 15)
@@ -250,6 +254,11 @@
 #define TIM1_DMAR		TIM_IOREG(1, 0x4C)
 
 
+#define TIM1_MOE        (1 << 15)
+#define TIM1_OSSI       (1 << 10)
+#define TIM1_OSSR       (1 << 9)
+
+
 // TIM2
 #define TIM2_CR1		TIM_IOREG(2, 0x00)
 #define TIM2_CR2		TIM_IOREG(2, 0x04)
@@ -355,6 +364,35 @@
 #define TIM8_BDTR		TIM_IOREG(8, 0x44)
 #define TIM8_DCR		TIM_IOREG(8, 0x48)
 #define TIM8_DMAR		TIM_IOREG(8, 0x4C)
+
+//TIM12
+#define TIM12_CR1		TIM_IOREG(12, 0x00)
+#define TIM12_SMCR        TIM_IOREG(12, 0x08)
+#define TIM12_DIER        TIM_IOREG(12, 0x0C)
+#define TIM12_SR          TIM_IOREG(12, 0x10)
+#define TIM12_EGR         TIM_IOREG(12, 0x14)
+#define TIM12_CCMR1       TIM_IOREG(12, 0x18)
+#define TIM12_CCER        TIM_IOREG(12, 0x20)
+#define TIM12_CNT         TIM_IOREG(12, 0x24)
+#define TIM12_PSC         TIM_IOREG(12, 0x28)
+#define TIM12_ARR         TIM_IOREG(12, 0x2C)
+#define TIM12_CCR1        TIM_IOREG(12, 0x34)
+#define TIM12_CCR2        TIM_IOREG(12, 0x38)
+
+
+//TIM13
+#define TIM13_CR1		TIM_IOREG(13, 0x00)
+#define TIM13_SMCR        TIM_IOREG(13, 0x08)
+#define TIM13_DIER        TIM_IOREG(13, 0x0C)
+#define TIM13_SR          TIM_IOREG(13, 0x10)
+#define TIM13_EGR         TIM_IOREG(13, 0x14)
+#define TIM13_CCMR1       TIM_IOREG(13, 0x18)
+#define TIM13_CCER        TIM_IOREG(13, 0x20)
+#define TIM13_CNT         TIM_IOREG(13, 0x24)
+#define TIM13_PSC         TIM_IOREG(13, 0x28)
+#define TIM13_ARR         TIM_IOREG(13, 0x2C)
+#define TIM13_CCR1        TIM_IOREG(13, 0x34)
+
 
 
 

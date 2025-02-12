@@ -7,29 +7,42 @@ char rx_buffer[RX_BUFFER_SIZE];
 uint16_t rx_index = 0;
 uint8_t rx_complete = 0;
 
+volatile int motor2A = 0;
+volatile int motor2B = 0;
+volatile int motor2C = 0;
+
+volatile int motor4A = 900;
+volatile int motor4B = 1100;
+volatile int motor4C = 0;
+
+volatile int motor6A = 0;
+volatile int motor6B = 0;
+volatile int motor6C = 0;
+
+
 /**
- * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART1
+ * @brief Cette fonction est appelé chaque fois qu'un message est reçu sur le RX de l'USART2
  * Donc chaque fois que le module HC-06 communiquera avec la carte
  */
 void handle_USART1()
 {
     printf("handle_USART1\n");
-    if (USART_SR & USART_SR_RXNE) // Si des données sont disponibles
+    if (USART1_SR & USART_SR_RXNE) // Si des données sont disponibles
     {
-        //USART_SR &= ~USART_SR_RXNE; // Effacer le flag RXNE
-        //USART_SR &= ~USART_SR_ORE;  // Effacer le flag ORE
-        uint32_t received_data = USART_DR;
-        USART_SR = REP_BITS(USART_SR, 3, 3, 0); // Effacer le flag RXNE
-        //uint8_t received_data = GET_BITS(USART_DR, 0, 8); // Lire les données
-        printf("received_data: %lx\n", received_data);
+        uint32_t received_data = USART1_DR;
+        USART1_SR = REP_BITS(USART1_SR, 3, 3, 0); // Effacer le flag RXNE
 
-        if (GET_BITS(received_data, 0, 4) == 0b0011){
-            stand();
+        if (GET_BITS(received_data, 0, 4) == 0b0011){ // AVANCER
+            printf("avancer\n");
+        /**
+         * 1 - Desactiver les IRQs
+         * 2 - Changer l handler de l'irq de TIM5
+         * 3 - Boucler en verifiant le position des moteurs qui va s'update à chaque proc de handler
+         * 4 - Si la position du moteur est bonne, desactiver le timer 5 et fin de l'irq de l'usart
+         */
         }
-        else if (GET_BITS(received_data, 0, 4) == 0b1000){
-            set_servo1(100);
-            set_servo2(50);
-            set_servo3(600);
+        else if (GET_BITS(received_data, 0, 4) == 0b1000){ // RECULER
+            printf("reculer\n");
         }
 
         // Traitez les données ici (ex. stockage dans un buffer)
@@ -42,6 +55,79 @@ void handle_USART1()
         }
     }
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Effacer le flag d'interruption
+}
+
+/*void handle_TIM5(){
+    TIM5_SR = 0;
+    NVIC_ICPR(TIM5_IRQ >> 5) = 1 << (TIM5_IRQ & 0x1F);  // Effacer le flag d'interruption
+    if (motor2A < 900){
+        set_servo2A(motor2A);
+        motor2A = motor2A + 20;
+    }
+    
+    if (motor2B < 1400){
+        set_servo2B(motor2B);
+        motor2B = motor2B + 20;
+    }
+
+    if (motor2C < 600){
+        set_servo2C(motor2C);
+        motor2C = motor2C + 20;
+    }
+
+    if (motor4A < 900){
+        set_servo4A(motor4A);
+        motor4A = motor4A + 20;
+    }
+
+    if (motor4B < 900){
+        set_servo4B(motor4B);
+        motor4B = motor4B + 20;
+    }
+
+    if (motor4C < 600){
+        set_servo4C(motor4C);
+        motor4C = motor4C + 20;
+    }
+
+    if (motor6A < 1100){
+        set_servo6A(motor6A);
+        motor6A = motor6A + 20;
+    }
+
+    if (motor6B < 1400){
+        set_servo6B(motor6B);
+        motor6B = motor6B + 20;
+    }
+
+    if (motor6C < 1200){
+        set_servo6C(motor6C);
+        motor6C = motor6C + 20;
+    }
+}  */
+
+int sens = 0;
+
+void handle_TIM13(){
+    TIM13_SR = 0;
+    NVIC_ICPR(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);  // Effacer le flag d'interruption
+    //printf("handle tim13\n");
+    if (motor2A <= 900){
+        sens = 0;
+    }
+    else if (motor2A >= 1400)
+    {
+        sens = 1;
+    }
+    if (sens == 0){
+        motor2A = motor2A + 20;
+        set_servo2A(motor2A);
+    }
+    else{
+        motor2A = motor2A - 20;
+        set_servo2A(motor2A);
+    }
+    printf("motor2A = %d\n", motor2A);
 }
 
 // void usart_send_string(const char* str)
@@ -95,36 +181,37 @@ void stm32f4_usart1_init(void){
     DISABLE_IRQS;                       // Disable IRQ
 
     // Activer l'horloge GPIO et USART
-    RCC_AHB1ENR |= RCC_GPIOAEN;         // Activer GPIOA pour USART1 (PA9: TX, PA10: RX)
+    RCC_AHB1ENR |= RCC_GPIOBEN;         // Activer GPIOD pour USART2 (PA9: TX, PA10: RX)
     RCC_APB2ENR |= RCC_USART1EN;        // Activer l'horloge pour l'USART1 (APB2)
 
-    GPIOA_MODER = REP_BITS(GPIOA_MODER, 9 * 2, 2, GPIO_MODER_ALT);
-    GPIOA_MODER = REP_BITS(GPIOA_MODER, 10 * 2, 2, GPIO_MODER_ALT);
+    GPIOB_MODER = REP_BITS(GPIOB_MODER, 6 * 2, 2, GPIO_MODER_ALT);
+    GPIOB_MODER = REP_BITS(GPIOB_MODER, 7 * 2, 2, GPIO_MODER_ALT);
 
-    // Configurer PA9 (USART1_TX) en AF7 (USART1)
-    GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (9 - 8) * 4, 4, 0b0111);
+    // Configurer PB6 (USART1_TX) en AF7 (USART1)
+    GPIOB_AFRL = REP_BITS(GPIOB_AFRL, 6 * 4, 4, 0b0111);
 
-    // Configurer PA10 (USART1_RX) en AF7 (USART1)
-    GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (10 - 8) * 4, 4, 0b0111);
+    // Configurer PB7 (USART1_RX) en AF7 (USART1)
+    GPIOB_AFRL = REP_BITS(GPIOB_AFRL, 7 * 4, 4, 0b0111);
 
+/***************************************A CHANGER POUR UNE CLK A 84 MHZ*************************************** */
+/***************************************SOIT 546.875********************************************************** */
 
-    // Valeur : 104.1875 à 16 MHz et oversampling par 16 pour 9600 bps
-    USART_BRR = REP_BITS(USART_BRR, 0, 4, 0b001010); // 9600 bps
-    USART_BRR = REP_BITS(USART_BRR, 4, 12, 0b11010011010); // 9600 bps
+    USART1_BRR = REP_BITS(USART1_BRR, 0, 4, 0b1010); // 9600 bps
+    USART1_BRR = REP_BITS(USART1_BRR, 4, 12, 0b11010011010); // 9600 bps
 
     /**
-     * Aciver l'émetteur
+     * Activer l'émetteur
      * Activer le récepteur
      * Activer l'interruption RXNE
      * Activer l'USART
      */
-    USART_CR1 |= USART_CR1_TE | USART_CR1_RE;
-    USART_CR1 &= ~USART_CR1_M; // 8 bits de données
-    USART_CR1 &= ~USART_CR1_PCE; // Pas de parité
-    USART_CR1 &= ~USART_CR1_OVER8; // Oversampling par 16
+    USART1_CR1 |= USART_CR1_TE | USART_CR1_RE;
+    USART1_CR1 &= ~USART_CR1_M; // 8 bits de données
+    USART1_CR1 &= ~USART_CR1_PCE; // Pas de parité
+    USART1_CR1 &= ~USART_CR1_OVER8; // Oversampling par 16
 
     //Configuration du registre CR2
-    USART_CR2 = REP_BITS(USART_CR2, 12, 2, 0);
+    USART1_CR2 = REP_BITS(USART1_CR2, 12, 2, 0);
 
 
     // Configuration de l'interruption
@@ -135,11 +222,15 @@ void stm32f4_usart1_init(void){
 
     NVIC_ICPR(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);
 
-    USART_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
-    USART_CR1 |= USART_CR1_UE; // Activer l'USART
+    USART1_CR1 |= USART_CR1_RXNEIE; // Activer l'interruption RXNE
+    USART1_CR1 |= USART_CR1_UE; // Activer l'USART
 
     NVIC_ISER(USART1_IRQ >> 5) = 1 << (USART1_IRQ & 0x1F);  // Activer les IRQ
-
-
+/*
+    NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+    NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_TIM13;
+    NVIC_IPR(TIM13_IRQ) = 0;
+    NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);    // Activer les IRQ
+*/
     ENABLE_IRQS;
 }
