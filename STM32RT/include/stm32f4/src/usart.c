@@ -31,7 +31,6 @@ void handle_USART1()
     {
         uint32_t received_data = USART1_DR;
         USART1_SR = REP_BITS(USART1_SR, 3, 3, 0); // Effacer le flag RXNE
-        //printf("%ld\n", GET_BITS(received_data, 0, 8));
 
         if (GET_BITS(received_data, 0, 4) == 0b0011){ // AVANCER
             printf("avancer\n");
@@ -188,10 +187,10 @@ void stm32f4_usart1_init(void){
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 6 * 2, 2, GPIO_MODER_ALT);
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 7 * 2, 2, GPIO_MODER_ALT);
 
-    // Configurer PB6 (USART1_TX) en AF7 (USART2)
+    // Configurer PB6 (USART1_TX) en AF7 (USART1)
     GPIOB_AFRL = REP_BITS(GPIOB_AFRL, 6 * 4, 4, 0b0111);
 
-    // Configurer PB6 (USART1_RX) en AF7 (USART2)
+    // Configurer PB7 (USART1_RX) en AF7 (USART1)
     GPIOB_AFRL = REP_BITS(GPIOB_AFRL, 7 * 4, 4, 0b0111);
 
 /***************************************A CHANGER POUR UNE CLK A 84 MHZ*************************************** */
