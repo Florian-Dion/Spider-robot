@@ -52,7 +52,7 @@ int main() {
 		printf("ADC1_DR = %d\n", x);
 		x = x/3 + 217;
 		printf("ADC1_DR / 3 = %d\n", x);
-		set_servo4C(x);
+		set_servo6C(2*x);
 		
 	}
 
