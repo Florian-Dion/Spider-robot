@@ -19,36 +19,35 @@
 #define DELAY_20MS (60000-1)
 /********************************************************************************************************** */
 
-void set_servo1A(int n){TIM5_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo1B(int n){TIM5_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo1C(int n){TIM5_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo1B(int n){TIM2_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo3A(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo4A(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo4C(int n){TIM2_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
 
 
-void set_servo2A(int n){TIM5_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo2B(int n){TIM3_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo2C(int n){TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo3C(int n){TIM3_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo3B(int n){TIM3_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo1A(int n){TIM3_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo4B(int n){TIM3_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
 
 
-void set_servo3A(int n){TIM1_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo3B(int n){TIM1_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo3C(int n){TIM1_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo2A(int n){TIM4_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo2C(int n){TIM4_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo1C(int n){TIM4_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
+void set_servo2B(int n){TIM4_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));} //good
 
-void set_servo4A(int n){TIM4_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo4B(int n){TIM3_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo4C(int n){TIM1_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
-
-void set_servo5A(int n){TIM4_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+/*void set_servo5A(int n){TIM4_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo5B(int n){TIM4_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo5C(int n){TIM4_CCR4 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
 void set_servo6A(int n){TIM2_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 void set_servo6B(int n){TIM2_CCR2 = SERVO_05MS + (n*(SERVO_1MS/900));}
-void set_servo6C(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}
+void set_servo6C(int n){TIM2_CCR3 = SERVO_05MS + (n*(SERVO_1MS/900));}*/
 
 //void test(int n) {TIM1_CCR1 = SERVO_05MS + (n*(SERVO_1MS/900));}
 
 // TIM1 init on GPIOA PA8, PA9, PA10, PE14
-void init_TIM1(){
+/*void init_TIM1(){
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 8*2, 2, GPIO_MODER_ALT);
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 9*2, 2, GPIO_MODER_ALT);
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 10*2, 2, GPIO_MODER_ALT);
@@ -73,7 +72,7 @@ void init_TIM1(){
     TIM1_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM1 init done\n");
-}
+}*/
 
 
 // TIM3 init on GPIOB A15, PB3, PB10, PB11
@@ -82,10 +81,10 @@ void init_TIM2(){
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 3*2, 2, GPIO_MODER_ALT);
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 10*2, 2, GPIO_MODER_ALT);
     GPIOB_MODER = REP_BITS(GPIOB_MODER, 11*2, 2, GPIO_MODER_ALT);
-    GPIOA_AFRH = REP_BITS(GPIOA_AFRL, (15-8) * 4, 4, 1);
+    GPIOA_AFRH = REP_BITS(GPIOA_AFRH, (15-8) * 4, 4, 1);
     GPIOB_AFRL = REP_BITS(GPIOB_AFRL, 3 * 4, 4, 1);
-    GPIOB_AFRH = REP_BITS(GPIOB_AFRL, (10-8) * 4, 4, 1);
-    GPIOB_AFRH = REP_BITS(GPIOB_AFRL, (11-8) * 4, 4, 1);
+    GPIOB_AFRH = REP_BITS(GPIOB_AFRH, (10-8) * 4, 4, 1);
+    GPIOB_AFRH = REP_BITS(GPIOB_AFRH, (11-8) * 4, 4, 1);
 
     //TIM3 init
     TIM2_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
@@ -96,15 +95,10 @@ void init_TIM2(){
     TIM2_ARR = SERVO_PERIOD;
     TIM2_EGR = TIM_UG;
     TIM2_SR = 0;
-    // set_servo4C(900);
-    // TIM3_CCR1 = SERVO_1MS;
-    // TIM3_CCR2 = SERVO_1MS;
-    // TIM3_CCR3 = SERVO_1MS;
-    //TIM3_CCR4 = SERVO_1MS;
-    //set_servo4C(900);
-    set_servo6A(900);
-    set_servo6B(900);
-    set_servo6C(900);
+    set_servo1B(900);
+    set_servo3A(900);
+    set_servo4A(900);
+    set_servo4C(900);
     TIM2_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM2 init done\n");
@@ -131,15 +125,10 @@ void init_TIM3(){
     TIM3_ARR = SERVO_PERIOD;
     TIM3_EGR = TIM_UG;
     TIM3_SR = 0;
-    // set_servo4C(900);
-    // TIM3_CCR1 = SERVO_1MS;
-    // TIM3_CCR2 = SERVO_1MS;
-    // TIM3_CCR3 = SERVO_1MS;
-    //TIM3_CCR4 = SERVO_1MS;
-    //set_servo4C(900);
-    set_servo2B(900);
-    set_servo2C(900);
-    set_servo4B(0);
+    set_servo3C(900);
+    set_servo3B(900);
+    set_servo1A(900);
+    set_servo4B(900);
     TIM3_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM3 init done\n");
@@ -165,21 +154,17 @@ void init_TIM4(){
     TIM4_ARR = SERVO_PERIOD;
     TIM4_EGR = TIM_UG;
     TIM4_SR = 0;
-    // TIM4_CCR1 = SERVO_1MS;
-    // TIM4_CCR2 = SERVO_1MS;
-    // TIM4_CCR3 = SERVO_1MS;
-    // TIM4_CCR4 = SERVO_1MS;
-    //set_servo4A(900);
-    set_servo4A(900);
-    set_servo5B(900);
-    set_servo5A(900);
+    set_servo2A(900);
+    set_servo2C(900);
+    set_servo1C(900);
+    set_servo2B(900);
     TIM4_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM4 init done\n");
 }
 
 //TIM5 init on GPIOA PA0, PA1, PA2, PA3
-void init_TIM5(){
+/*void init_TIM5(){
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 0*2, 2, GPIO_MODER_ALT);
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 1*2, 2, GPIO_MODER_ALT);
     GPIOA_MODER = REP_BITS(GPIOA_MODER, 2*2, 2, GPIO_MODER_ALT);
@@ -211,10 +196,10 @@ void init_TIM5(){
     TIM5_CR1 = TIM_CEN | TIM_ARPE;
 
     printf("TIM5 init done\n");
-}
+}*/
 
 // TIM8 init on GPIOC PC6, PC7, PC8, PC9
-void init_TIM8(){
+/*void init_TIM8(){
     GPIOC_MODER = REP_BITS(GPIOC_MODER, 6*2, 2, GPIO_MODER_ALT);
     GPIOC_MODER = REP_BITS(GPIOC_MODER, 7*2, 2, GPIO_MODER_ALT);
     GPIOC_MODER = REP_BITS(GPIOC_MODER, 8*2, 2, GPIO_MODER_ALT);
@@ -239,7 +224,7 @@ void init_TIM8(){
     TIM8_CR1 |= TIM_CEN;
 
     printf("TIM8 init done\n");
-}
+}*/
 
 void init_servo(){
 
@@ -271,7 +256,7 @@ void init_servo(){
     init_TIM3();
     init_TIM2();
     init_TIM4();
-    init_TIM5();
+    //init_TIM5();
     //init_TIM8();
 
     /**
