@@ -31,6 +31,7 @@ void init_photo_res(){
 
 int main() {
 	printf("\nStarting...\n");
+	
 
 	printf("Initialisation...\n");
     init_servo();           // Initialiser les servo
@@ -49,10 +50,10 @@ int main() {
 	while(1) {
 		while (!(ADC1_SR & ADC_EOC));
 		int x = ADC1_DR;
-		printf("ADC1_DR = %d\n", x);
+		//printf("ADC1_DR = %d\n", x);
 		x = x/3 + 217;
-		printf("ADC1_DR / 3 = %d\n", x);
-		set_servo6C(2*x);
+		//printf("ADC1_DR / 3 = %d\n", x);
+		//set_servo4C(x);
 		
 	}
 
