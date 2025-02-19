@@ -119,16 +119,16 @@ void init_TIM3(){
     TIM3_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
     TIM3_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
     //TIM3_CCMR1 = TIM_OC1M_PWM1 | TIM_OC2M_PWM1;
-    //TIM3_CCMR2 = TIM_OC3M_PWM1 | TIM_OC4M_PWM1;
+    //TIM3_CCMR2 = TIM_OC4M_PWM1;
     TIM3_CCER = TIM_CC1E | TIM_CC2E | TIM_CC3E | TIM_CC4E;
-    //TIM3_CCER = TIM_CC1E | TIM_CC3E | TIM_CC4E;
+    //TIM3_CCER = TIM_CC4E;
     TIM3_CR1 = 0;
     TIM3_PSC = SERVO_PSC;
     TIM3_ARR = SERVO_PERIOD;
     TIM3_EGR = TIM_UG;
     TIM3_SR = 0;
     set_servo3C(900);
-    set_servo3B(1100);
+    set_servo3B(900);
     set_servo1A(900);
     set_servo4B(1100);
     TIM3_CR1 = TIM_CEN | TIM_ARPE;
@@ -161,7 +161,7 @@ void init_TIM4(){
     TIM4_SR = 0;
     set_servo2A(1200);
     set_servo2C(400);
-    set_servo1C(900);
+    set_servo1C(700);
     set_servo2B(1600);
     TIM4_CR1 = TIM_CEN | TIM_ARPE;
 
@@ -214,7 +214,7 @@ void init_TIM8(){
     TIM8_CCMR1 |= TIM_OC1M_PWM1;
     TIM8_CCER |= TIM_CC1E;
     TIM8_BDTR |= TIM1_MOE;
-    set_servo1B(100);
+    set_servo1B(1800);
     TIM8_CR1 |= TIM_CEN;
 
     printf("TIM8 init done\n");
