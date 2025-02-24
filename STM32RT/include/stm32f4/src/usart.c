@@ -22,7 +22,15 @@ void handle_USART1()
             NVIC_IPR(TIM13_IRQ) = 0;
             NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);                        // Activer les IRQ
         }
-        else if (GET_BITS(received_data, 0, 4) == 0b1000){}
+        else if (GET_BITS(received_data, 0, 4) == 0b1000){
+            printf("SET IDLE\n");
+
+            DISABLE_IRQS;
+            NVIC_ICER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);
+            NVIC_IRQ(TIM13_IRQ) = (uint32_t)handle_set_idle;
+            NVIC_IPR(TIM13_IRQ) = 0;
+            NVIC_ISER(TIM13_IRQ >> 5) = 1 << (TIM13_IRQ & 0x1F);                        // Activer les IRQ
+        }
 
         NVIC_ISER(USART1_IRQ >> 5) = 0 << (USART1_IRQ & 0x1F);                          // Desactiver l'USART1
     }
